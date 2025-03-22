@@ -1,0 +1,19 @@
+
+# Temporary folders
+tmp/
+**/tmp/
+
+# Environment variables
+.env
+
+# Air config
+.air.toml
+
+# Large files
+*.[gG][bB]
+
+# Text files
+*.txt
+
+# Air temporary files
+1GB
