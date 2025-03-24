@@ -11,6 +11,13 @@ func setupRoutes(app *fiber.App) {
 	// Main route of test
 	app.Get("/", handlers.Home)
 
+	// Routes of Authentication
+	auth := app.Group("/auth", handlers.VerifyToken)
+	auth.Get("/users", handlers.GetUsers)
+	auth.Post("/logout", handlers.Logout)
+	app.Post("/login", handlers.Login)
+	app.Post("/register", handlers.Register)
+
 	// Routes of Make
 	app.Get("/makes", handlers.GetMakes)
 	app.Get("/makes/:id", handlers.GetMakeById)
@@ -20,5 +27,9 @@ func setupRoutes(app *fiber.App) {
 
 	// Routes of Car
 	app.Get("/cars", handlers.GetCars)
+	app.Get("/cars/:id", handlers.GetCarById)
 	app.Post("/cars", handlers.CreateCar)
+	app.Put("/cars/:id", handlers.UpdateCar)
+	app.Delete("/cars/:id", handlers.DeleteCar)
+
 }
