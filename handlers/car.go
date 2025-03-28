@@ -1,8 +1,6 @@
 package handlers
 
 import (
-	"fmt"
-
 	"github.com/cmerin0/CarsGoApp/db"
 	"github.com/cmerin0/CarsGoApp/models"
 	"github.com/gofiber/fiber/v2"
@@ -13,7 +11,10 @@ func GetCars(c *fiber.Ctx) error {
 
 	db.DB.Db.Find(&cars) // Find all the cars and store them in the cars variable
 
-	return c.Status(200).JSON(cars) // Return a status 200 code response and the cars
+	return c.Render("cars", fiber.Map{
+		"Title": "Cars",
+		"Cars":  cars,
+	})
 }
 
 func GetCarById(c *fiber.Ctx) error {
@@ -44,7 +45,6 @@ func CreateCar(c *fiber.Ctx) error {
 }
 
 func UpdateCar(c *fiber.Ctx) error {
-	fmt.Println("Updating car")
 	id := c.Params("id")   // Get the id from the request
 	car := new(models.Car) // Create a new car object
 

@@ -1,13 +1,17 @@
 package handlers
 
 import (
+	"fmt"
+
 	"github.com/cmerin0/CarsGoApp/db"
 	"github.com/cmerin0/CarsGoApp/models"
 	"github.com/gofiber/fiber/v2"
 )
 
 func Home(c *fiber.Ctx) error {
-	return c.SendString("This is my home route of make!")
+	return c.Render("index", fiber.Map{
+		"Title": "Home",
+	})
 }
 
 // Route that returns all the makes
@@ -15,9 +19,12 @@ func GetMakes(c *fiber.Ctx) error {
 
 	makes := []models.Make{} // Creates an array of Models make
 
-	db.DB.Db.Preload("Cars").Find(&makes) // Find all the makes and store them in the makes variable
+	db.DB.Db.Order("ID asc").Find(&makes) // Find all the makes and store them in the makes variable
 
-	return c.Status(200).JSON(makes) // Return a status 200 code response and the makes
+	return c.Render("makes", fiber.Map{
+		"Title": "Makes",
+		"Makes": makes,
+	}) // Returning all makes and sending to template
 }
 
 // Route that returns a make by ID
@@ -53,11 +60,13 @@ func CreateMake(c *fiber.Ctx) error {
 
 	// If not errors we create the new make and send a status 200 code response and the make created
 	db.DB.Db.Create(&make) //package.global_variable.instace.pointer_to_gorm_database_connection
-	return c.Status(200).JSON(make)
+	return c.Redirect("/makes")
 
 }
 
 func UpdateMake(c *fiber.Ctx) error {
+
+	fmt.Println("entro aca al menos")
 
 	id := c.Params("id")     // Get the id from the url
 	make := new(models.Make) // Create a new model variable
@@ -82,7 +91,7 @@ func UpdateMake(c *fiber.Ctx) error {
 	make.ID = existingMake.ID // Ensure the ID is set for the update
 	db.DB.Db.Save(&make)
 
-	return c.Status(200).JSON(make) // return a status 200 response + make updated
+	return c.Redirect("/makes") // return a status 200 response + make updated
 
 }
 

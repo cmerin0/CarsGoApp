@@ -1,0 +1,119 @@
+{{ if .Makes }}
+<a class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addMakeModal">Add Make</a>
+<br><br>
+<table class="table" id="makeList">
+    <thead>
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Name</th>
+        <th scope="col">Foundation Year</th>
+        <th scope="col">Options</th>
+      </tr>
+    </thead>
+    <tbody>
+    {{ range .Makes }}
+      <tr>
+        <th scope="row"> {{ .ID }}</th>
+        <td> {{ .Name }} </td>
+        <td> {{ .Foundation_Year }} </td>
+        <td>
+            <a class="btn btn-warning" 
+              data-bs-toggle="modal" 
+              data-bs-target="#updateMakeModal"
+              data-bs-name="{{ .Name }}"
+              data-bs-fyear="{{ .Foundation_Year }}"
+              data-bs-id="{{ .ID }}"> +Update </a>
+
+            <a href="#" class="btn btn-danger" 
+              hx-delete="/makes/{{.ID}}"
+              hx-confirm="Are you sure you want to Delete this Make?"
+              hx-target="#makeList"> -Delete </a>
+        </td>
+      </tr>
+      {{ end }}
+    </tbody>
+</table>
+{{ else }}
+    <h1> NO Makes to display</h1>
+{{ end }}
+
+<!-- Modal for Adding Makes -->
+<div class="modal fade" id="addMakeModal" tabindex="-1" aria-labelledby="AddMakeModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5">Insert to {{ .Title }}</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Form to Add a Make -->
+        <form id="createMakeForm" method="POST" action="/makes">
+          <div class="form-group m-2">
+            <label class="mb-1">Name</label>
+            <input type="text" class="form-control" id="addName" name="name" placeholder="Enter name of make" required>
+          </div>
+          <div class="form-group m-2">
+            <label class="mb-1">Foundation Year</label>
+            <input type="number" class="form-control" id="addFoundationYear" name="foundation_year" placeholder="Enter year of foundation" required>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button form="createMakeForm" type="submit" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal for Updating Makes -->
+<div class="modal fade" id="updateMakeModal" tabindex="-1" aria-labelledby="updateMakeModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5">Update a Make</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Form to Add a Make -->
+        <form id="updateMakeForm" method="POST" action="">
+          <div class="form-group m-2">
+            <label class="mb-1">Name</label>
+            <input type="text" class="form-control" id="updateName" name="name" value="{{ .Name }}" required>
+          </div>
+          <div class="form-group m-2">
+            <label class="mb-1">Foundation Year</label>
+            <input type="number" class="form-control" id="updateFoundationYear" name="foundation_year" value="{{ .Foundation_Year }}" required>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" form="updateMakeForm" id="updateButton" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+      // This script handles the update modal functionality for car makes
+      // 1. Gets the button that triggered the modal
+      // 2. Retrieves make details (id, name, foundation year) from data attributes
+      // 3. Updates the modal form fields with the make's current values
+      // 4. Sets up event listener on modal show to populate fields automatically
+      const myModal = document.getElementById('updateMakeModal');
+      myModal.addEventListener('show.bs.modal', event => {
+          const button = event.relatedTarget; // Button that triggered the modal
+          const id = button.getAttribute('data-bs-id');
+          const name = button.getAttribute('data-bs-name');
+          const fyear = button.getAttribute('data-bs-fyear');
+
+          const makeForm = myModal.querySelector('#updateMakeForm')
+          const makeName = myModal.querySelector('#updateName');
+          const makeFYear = myModal.querySelector('#updateFoundationYear');
+
+          makeForm.setAttribute('action', `/makes/${id}`)
+          makeName.value = name;
+          makeFYear.value = fyear;
+      });
+</script>

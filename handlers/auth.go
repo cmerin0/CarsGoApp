@@ -63,9 +63,12 @@ func VerifyToken(c *fiber.Ctx) error {
 // Listing Users Protected
 func GetUsers(c *fiber.Ctx) error {
 
-	users := []models.User{}                    // Creating a list of users bucket
-	db.DB.Db.Find(&users)                       //Getting all users
-	return c.Status(fiber.StatusOK).JSON(users) // Returning all users
+	users := []models.User{} // Creating a list of users bucket
+	db.DB.Db.Find(&users)    //Getting all users
+	return c.Render("users", fiber.Map{
+		"Title": "Users",
+		"Users": users,
+	}) // Returning all users and sending to template
 }
 
 func Register(c *fiber.Ctx) error {
@@ -129,9 +132,9 @@ func Login(c *fiber.Ctx) error {
 		Name:     "token",
 		Value:    token,
 		Expires:  time.Now().Add(time.Hour * 2),  // Cookie expires in 24 hours
-		HTTPOnly: true,                           // Important for security
-		Secure:   false,                          //Important for security.
-		SameSite: fiber.CookieSameSiteStrictMode, //Important for security.
+		HTTPOnly: true,                           // Important for security (set false for https only)
+		Secure:   false,                          // Set true in production
+		SameSite: fiber.CookieSameSiteStrictMode, // Important for security.
 	}
 
 	c.Cookie(&cookie) // Setting up cookie in fiber context
@@ -145,9 +148,9 @@ func Logout(c *fiber.Ctx) error {
 	cookie := fiber.Cookie{
 		Name:     "token",
 		Value:    "",
-		Expires:  time.Now().Add(-time.Hour), // Cookie expires in 24 hours
-		HTTPOnly: true,                       // Important for security
-		Secure:   false,                      //Important for security.
+		Expires:  time.Now().Add(-time.Hour),
+		HTTPOnly: true,
+		Secure:   false,
 		SameSite: fiber.CookieSameSiteStrictMode,
 	}
 

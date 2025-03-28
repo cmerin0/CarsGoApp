@@ -1,0 +1,33 @@
+{{ if .Cars }}
+<a class="btn btn-success" data-toggle="modal" data-target="#addModal">Add Car</a>
+<br><br>
+<table class="table">
+    <thead>
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Name</th>
+        <th scope="col">Make ID</th>
+        <th scope="col">Year</th>
+        <th scope="col">Price</th>
+        <th scope="col">Options</th>
+      </tr>
+    </thead>
+    <tbody>
+    {{ range .Cars }}
+      <tr>
+        <th scope="row"> {{ .ID }}</th>
+        <td> {{ .Name }} </td>
+        <td> {{ .MakeID }} </td>
+        <td> {{ .Year }} </td>
+        <td> ${{ .Price }} </td>
+        <td>
+            <a href="/update" class="btn btn-warning"> +Update </a>
+            <a href="/delete" class="btn btn-danger"> -Delete </a>
+        </td>
+      </tr>
+      {{ end }}
+    </tbody>
+</table>
+{{ else }}
+    <h1> No Cars to display</h1>
+{{ end }}

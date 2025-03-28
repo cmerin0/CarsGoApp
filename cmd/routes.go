@@ -13,7 +13,7 @@ func setupRoutes(app *fiber.App) {
 
 	// Routes of Authentication
 	auth := app.Group("/auth", handlers.VerifyToken)
-	auth.Get("/users", handlers.GetUsers)
+	app.Get("/users", handlers.GetUsers)
 	auth.Post("/logout", handlers.Logout)
 	app.Post("/login", handlers.Login)
 	app.Post("/register", handlers.Register)
@@ -22,7 +22,7 @@ func setupRoutes(app *fiber.App) {
 	app.Get("/makes", handlers.GetMakes)
 	app.Get("/makes/:id", handlers.GetMakeById)
 	app.Post("/makes", handlers.CreateMake)
-	app.Put("/makes/:id", handlers.UpdateMake)
+	app.Post("/makes/:id", handlers.UpdateMake)
 	app.Delete("/makes/:id", handlers.DeleteMake)
 
 	// Routes of Car

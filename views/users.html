@@ -1,0 +1,31 @@
+{{ if .Users }}
+<a href="/add" class="btn btn-success">Add User</a>
+<br><br>
+<table class="table">
+    <thead>
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Name</th>
+        <th scope="col">Email</th>
+        <th scope="col">Password</th>
+        <th scope="col">Options</th>
+      </tr>
+    </thead>
+    <tbody>
+    {{ range .Users }}
+      <tr>
+        <th scope="row"> {{ .ID }}</th>
+        <td> {{ .Name }} </td>
+        <td> {{ .Email }} </td>
+        <td> {{ .Password }} </td>
+        <td>
+            <a href="/update" class="btn btn-warning"> +Update </a>
+            <a href="/delete" class="btn btn-danger"> -Delete </a>
+        </td>
+      </tr>
+      {{ end }}
+    </tbody>
+</table>
+{{ else }}
+    <h1> NO Users to display</h1>
+{{ end }}
